@@ -1,0 +1,40 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 800" width="360" height="800" fill="none" role="img" aria-label="Narvent splash screen" xmlns:c2pa="http://c2pa.org/manifest">
+  <title>Narvent — splash</title>
+  
+  <defs>
+    <linearGradient id="bar0" x1="-101.813" y1="405.84" x2="297.669" y2="405.84" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"></stop><stop offset="1" stop-color="#fff" stop-opacity="0"></stop></linearGradient>
+    <linearGradient id="bar1" x1="459.477" y1="469.84" x2="858.959" y2="469.84" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"></stop><stop offset="1" stop-color="#fff" stop-opacity="0"></stop></linearGradient>
+    <linearGradient id="bar2" x1="-61.8135" y1="538.062" x2="337.669" y2="538.062" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"></stop><stop offset="1" stop-color="#fff" stop-opacity="0"></stop></linearGradient>
+    <linearGradient id="bar3" x1="419.477" y1="337.617" x2="818.959" y2="337.617" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"></stop><stop offset="1" stop-color="#fff" stop-opacity="0"></stop></linearGradient>
+    <filter id="glow" x="79.1186" y="305.994" width="195.768" height="230.883" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+      <feOffset dx="-2" dy="-2"></feOffset>
+      <feGaussianBlur stdDeviation="23.8"></feGaussianBlur>
+      <feComposite in2="hardAlpha" operator="out"></feComposite>
+      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.71 0"></feColorMatrix>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="shadow"></feBlend>
+      <feBlend mode="normal" in="SourceGraphic" in2="shadow" result="shape"></feBlend>
+    </filter>
+    <mask id="markClip" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="160" y="353" width="45" height="66">
+      <rect x="160.166" y="353" width="44.2379" height="65.1365" fill="#D9D9D9"></rect>
+    </mask>
+    <clipPath id="frame"><rect width="360" height="800" rx="11"></rect></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="360" height="800" rx="11" fill="#7D69FF"></rect>
+
+    <g id="mark" filter="url(#glow)" style="transform-origin:180px 400px">
+      <path d="M160.166 446.358L152.161 430.493L174.048 446.357L160.166 446.358Z" fill="#fff"></path>
+      <path d="M160.166 384.883L178.471 395.027V446.358H160.166V384.883Z" fill="#fff"></path>
+      <g mask="url(#markClip)"><path d="M160.082 355.594L204.405 379.948V418.145L186.542 408.289V389.96L160.082 375.384V355.594Z" fill="#fff"></path></g>
+    </g>
+
+  <rect opacity="0.15" x="-101.813" y="383" width="399.483" height="45.6794" transform="rotate(45 -101.813 383)" fill="url(#bar0)"></rect>
+  <rect opacity="0.15" x="459.477" y="447" width="399.483" height="45.6794" transform="rotate(-135 459.477 447)" fill="url(#bar1)"></rect>
+  <rect opacity="0.15" x="-61.8135" y="515.223" width="399.483" height="45.6794" transform="rotate(45 -61.8135 515.223)" fill="url(#bar2)"></rect>
+  <rect opacity="0.15" x="419.477" y="314.777" width="399.483" height="45.6794" transform="rotate(-135 419.477 314.777)" fill="url(#bar3)"></rect>
+  </g>
+</svg>
