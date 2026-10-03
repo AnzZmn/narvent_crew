@@ -339,8 +339,8 @@ export default function SetupProfileAndroid({
         now.getDate(),
       ),
       minimumDate: new Date(now.getFullYear() - 100, 0, 1),
-      onChange: (e, date) => {
-        if (e.type === "set" && date) setDobText(toDisplay(date));
+      onValueChange: (e, date) => {
+        if (e.nativeEvent && date) setDobText(toDisplay(date));
       },
     });
   };
@@ -414,7 +414,7 @@ export default function SetupProfileAndroid({
           >
             <BackArrow />
           </Pressable>
-          <Text style={styles.headerTitle}>Setup Profile</Text>
+          <Text style={styles.headerTitle}>Setup Profiles</Text>
           <View style={styles.headerSide} />
         </View>
 

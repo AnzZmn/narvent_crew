@@ -264,7 +264,7 @@ export default function LoginAndroid({
                   style={styles.button}
                 >
                   <Text style={styles.buttonText}>
-                    {busy ? "Sending…" : "OTP"}
+                    {busy ? "Sending…" : "Get Started"}
                   </Text>
                 </Pressable>
               </View>

@@ -762,7 +762,7 @@ export default function SetupProfileIOS({ onBack, onSubmit, initial }: Props) {
             minimumDate={minDate}
             themeVariant="light"
             textColor={INK}
-            onChange={(_, d) => d && setDraftDate(d)}
+            onValueChange={(_, d) => d && setDraftDate(d)}
             style={styles.spinner}
           />
         </BlurView>

@@ -323,7 +323,7 @@ export default function LoginIOS({
                   >
                     <View style={styles.buttonHighlight} pointerEvents="none" />
                     <Text style={styles.buttonText}>
-                      {busy ? "Sending…" : "OTP"}
+                      {busy ? "Sending OTP" : "Get Started"}
                     </Text>
                   </View>
                 )}
