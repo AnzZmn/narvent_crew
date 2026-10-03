@@ -62,6 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         androidGoogleMapsApiKey: process.env.MAPS_ANDROID_API_KEY,
       },
     ],
+    "expo-build-properties",
   ],
 
   experiments: {
