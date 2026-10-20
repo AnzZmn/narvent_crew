@@ -1,8 +1,13 @@
-export type Trade = 'Electrical' | 'Plumbing' | 'Carpentry' | 'Painting' | 'Helper';
+export type Trade =
+  | "Electrical"
+  | "Plumbing"
+  | "Carpentry"
+  | "Painting"
+  | "Helper";
 
-export type LatLng = {latitude: number; longitude: number};
+export type LatLng = { latitude: number; longitude: number };
 
-export type PayUnit = 'fixed' | 'per day' | 'per hour';
+export type PayUnit = "fixed" | "per day" | "per hour";
 
 export type Job = {
   id: string;
@@ -25,7 +30,7 @@ export type Job = {
   duration: string;
   description: string;
   requirements: string[];
-  client: {name: string; rating: number; jobsPosted: number};
+  client: { name: string; rating: number; jobsPosted: number };
 };
 
 /** One selectable day in the slot picker */

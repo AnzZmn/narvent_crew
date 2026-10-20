@@ -1,24 +1,33 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import JobMap, {JobMapHandle} from './components/JobMap';
-import DiscoverHeader from './components/DiscoverHeader';
-import TradeChips, {TradeFilter} from './components/TradeChips';
-import LocateButton from './components/LocateButton';
-import JobCarousel, {JobCarouselHandle} from './components/JobCarousel';
-import JobSheet from './components/JobSheet';
-import JobDetails from './components/JobDetails';
-import BookingConfirmed from './components/BookingConfirmed';
-import PrimaryButton from './components/PrimaryButton';
-import Toast from './components/Toast';
-import TabBar, {Tab, TAB_BAR_HEIGHT} from './tabbar/TabBar';
-import {C, Variant, VariantContext} from './components/theme';
-import {SAMPLE_JOBS, SAMPLE_USER} from './sampleJobs';
-import {distanceKm, formatKm, regionAround} from './utils/geo';
-import {buildDays, demoAvailability} from './utils/slots';
-import {openDirections} from './utils/directions';
-import {useUserLocation} from './hooks/useUserLocation';
-import type {Booking, Day, Job, LatLng, TimeSlot} from './types';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import JobMap, { JobMapHandle } from "./components/JobMap";
+import DiscoverHeader from "./components/DiscoverHeader";
+import TradeChips, {
+  TRADE_FILTERS,
+  TradeFilter,
+} from "./components/TradeChips";
+import LocateButton from "./components/LocateButton";
+import JobCarousel, { JobCarouselHandle } from "./components/JobCarousel";
+import JobSheet from "./components/JobSheet";
+import JobDetails from "./components/JobDetails";
+import BookingConfirmed from "./components/BookingConfirmed";
+import PrimaryButton from "./components/PrimaryButton";
+import Toast from "./components/Toast";
+import TabBar, { Tab, TAB_BAR_HEIGHT } from "./tabbar/TabBar";
+import { C, Variant, VariantContext } from "./components/theme";
+import { SAMPLE_JOBS, SAMPLE_USER } from "./sampleJobs";
+import { distanceKm, formatKm, regionAround } from "./utils/geo";
+import { buildDays, demoAvailability } from "./utils/slots";
+import { openDirections } from "./utils/directions";
+import { useUserLocation } from "./hooks/useUserLocation";
+import type { Booking, Day, Job, LatLng, TimeSlot } from "./types";
 
 export type DiscoverFlowProps = {
   /** Open jobs to show. Omit for the mockup data. */
@@ -53,9 +62,13 @@ export type DiscoverFlowProps = {
 
 const SHEET_DAYS = 6;
 
-export default function DiscoverFlow({variant, ...props}: DiscoverFlowProps) {
+export default function DiscoverFlow({ variant, ...props }: DiscoverFlowProps) {
   const inner = <DiscoverInner {...props} />;
-  return variant ? <VariantContext.Provider value={variant}>{inner}</VariantContext.Provider> : inner;
+  return variant ? (
+    <VariantContext.Provider value={variant}>{inner}</VariantContext.Provider>
+  ) : (
+    inner
+  );
 }
 
 function DiscoverInner({
@@ -63,7 +76,7 @@ function DiscoverInner({
   loading,
   userLocation,
   fallbackLocation,
-  areaLabel = 'near you',
+  areaLabel = "near you",
   hideTabBar,
   tabBarBottom,
   onTabChange,
@@ -72,33 +85,47 @@ function DiscoverInner({
   getAvailability,
   onBook,
   onDirections,
-}: Omit<DiscoverFlowProps, 'variant'>) {
+}: Omit<DiscoverFlowProps, "variant">) {
   const insets = useSafeAreaInsets();
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const demo = jobsProp === undefined;
   const allJobs = jobsProp ?? SAMPLE_JOBS;
 
   // location: explicit prop → device → fallback → mockup point
-  const device = useUserLocation(fallbackLocation ?? null, !userLocation && !demo);
+  const device = useUserLocation(
+    fallbackLocation ?? null,
+    !userLocation && !demo,
+  );
   const user = userLocation ?? (demo ? SAMPLE_USER : device.location);
-  const center = user ?? fallbackLocation ?? allJobs[0]?.coordinate ?? SAMPLE_USER;
-  const initialRegion = useMemo(() => regionAround(center), [center.latitude, center.longitude]); // eslint-disable-line react-hooks/exhaustive-deps
+  const center =
+    user ?? fallbackLocation ?? allJobs[0]?.coordinate ?? SAMPLE_USER;
+  const initialRegion = useMemo(
+    () => regionAround(center),
+    [center.latitude, center.longitude],
+  ); // eslint-disable-line react-hooks/exhaustive-deps
 
   // jobs sorted by distance from the worker
   const sorted = useMemo(() => {
     if (!user) return allJobs;
-    return [...allJobs].sort((a, b) => distanceKm(user, a.coordinate) - distanceKm(user, b.coordinate));
+    return [...allJobs].sort(
+      (a, b) => distanceKm(user, a.coordinate) - distanceKm(user, b.coordinate),
+    );
   }, [allJobs, user]);
   const distances = useMemo(() => {
     const m: Record<string, string> = {};
-    sorted.forEach(j => (m[j.id] = user ? formatKm(distanceKm(user, j.coordinate)) : '—'));
+    sorted.forEach(
+      (j) => (m[j.id] = user ? formatKm(distanceKm(user, j.coordinate)) : "—"),
+    );
     return m;
   }, [sorted, user]);
 
-  const [filter, setFilter] = useState<TradeFilter>('All');
-  const visible = useMemo(() => sorted.filter(j => filter === 'All' || j.trade === filter), [sorted, filter]);
+  const [filter, setFilter] = useState<TradeFilter>("All");
+  const visible = useMemo(
+    () => sorted.filter((j) => filter === "All" || j.trade === filter),
+    [sorted, filter],
+  );
   const [selectedId, setSelectedId] = useState<string | undefined>();
-  const selected = visible.find(j => j.id === selectedId) ?? visible[0];
+  const selected = visible.find((j) => j.id === selectedId) ?? visible[0];
 
   // layout: tab bar → carousel → locate button, stacked from the bottom
   const barBottom = tabBarBottom ?? Math.max(insets.bottom, 10) + 14;
@@ -132,7 +159,7 @@ function DiscoverInner({
 
   const onFilter = (t: TradeFilter) => {
     setFilter(t);
-    const first = sorted.find(j => t === 'All' || j.trade === t);
+    const first = sorted.find((j) => t === "All" || j.trade === t);
     setSelectedId(first?.id);
     carousel.current?.scrollToIndex(0, false);
     if (first) map.current?.focus(first.coordinate, focusOffset);
@@ -145,12 +172,14 @@ function DiscoverInner({
   const [dayIndex, setDayIndex] = useState(0);
   const [timeIndex, setTimeIndex] = useState<number | null>(null);
   const [times, setTimes] = useState<TimeSlot[] | null>(null);
-  const [bookings, setBookings] = useState<Record<string, Booking>>(initialBookings ?? {});
+  const [bookings, setBookings] = useState<Record<string, Booking>>(
+    initialBookings ?? {},
+  );
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (initialBookings) setBookings(b => ({...initialBookings, ...b}));
+    if (initialBookings) setBookings((b) => ({ ...initialBookings, ...b }));
   }, [initialBookings]);
 
   useEffect(() => onOverlayChange?.(sheetOpen), [sheetOpen, onOverlayChange]);
@@ -160,8 +189,12 @@ function DiscoverInner({
     let alive = true;
     setTimes(null);
     const day = days[dayIndex];
-    Promise.resolve(getAvailability ? getAvailability(sheetJob, day) : demoAvailability(sheetJob, day, dayIndex))
-      .then(t => alive && setTimes(t))
+    Promise.resolve(
+      getAvailability
+        ? getAvailability(sheetJob, day)
+        : demoAvailability(sheetJob, day, dayIndex),
+    )
+      .then((t) => alive && setTimes(t))
       .catch(() => alive && setTimes([]));
     return () => {
       alive = false;
@@ -182,27 +215,49 @@ function DiscoverInner({
   const book = async () => {
     if (!sheetJob || timeIndex == null || !times) return;
     const day = days[dayIndex];
-    const b: Booking = {jobId: sheetJob.id, date: day.key, time: times[timeIndex].time, label: day.short + ', ' + times[timeIndex].time};
+    const b: Booking = {
+      jobId: sheetJob.id,
+      date: day.key,
+      time: times[timeIndex].time,
+      label: day.short + ", " + times[timeIndex].time,
+    };
     setBusy(true);
     try {
       await onBook?.(b, sheetJob);
-      setBookings(prev => ({...prev, [sheetJob.id]: b}));
+      setBookings((prev) => ({ ...prev, [sheetJob.id]: b }));
       setConfirmed(true);
     } catch {
-      flash('Couldn’t book that slot. Try again.');
+      flash("Couldn’t book that slot. Try again.");
     } finally {
       setBusy(false);
     }
   };
 
   const directions = useCallback(
-    (job: Job) => (onDirections ? onDirections(job) : openDirections(job.coordinate, job.title)),
+    (job: Job) =>
+      onDirections
+        ? onDirections(job)
+        : openDirections(job.coordinate, job.title),
     [onDirections],
   );
 
   const count = visible.length;
-  const subtitle = loading ? 'Finding work near you…' : count + (count === 1 ? ' job ' : ' jobs ') + areaLabel;
+  const subtitle = loading
+    ? "Finding work near you…"
+    : count + (count === 1 ? " job " : " jobs ") + areaLabel;
   const canBook = timeIndex != null && !!times && !times[timeIndex]?.full;
+
+  const trades = useMemo(
+    () =>
+      TRADE_FILTERS.map((t) => ({
+        label: t,
+        count:
+          t === "All"
+            ? sorted.length
+            : sorted.filter((j) => j.trade === t).length,
+      })),
+    [sorted],
+  );
 
   return (
     <View style={styles.root}>
@@ -213,14 +268,23 @@ function DiscoverInner({
         user={user}
         initialRegion={initialRegion}
         focusOffset={focusOffset}
-        onSelect={j => select(j, true)}
+        onSelect={(j) => select(j, true)}
       />
 
-      <DiscoverHeader subtitle={subtitle} onLayoutHeight={setHeaderH}>
-        <TradeChips jobs={sorted} value={filter} onChange={onFilter} />
-      </DiscoverHeader>
+      <DiscoverHeader
+        subtitle={subtitle}
+        trades={trades}
+        activeTrade={filter}
+        onTradeChange={(t) => onFilter(t as TradeFilter)}
+        onLayoutHeight={setHeaderH}
+      />
 
-      {user && <LocateButton bottom={locateBottom} onPress={() => map.current?.focus(user, focusOffset)} />}
+      {user && (
+        <LocateButton
+          bottom={locateBottom}
+          onPress={() => map.current?.focus(user, focusOffset)}
+        />
+      )}
 
       <JobCarousel
         ref={carousel}
@@ -229,13 +293,23 @@ function DiscoverInner({
         bottom={carouselBottom}
         distances={distances}
         bookings={bookings}
-        onIndexChange={i => visible[i] && visible[i].id !== selected?.id && select(visible[i], false)}
+        onIndexChange={(i) =>
+          visible[i] &&
+          visible[i].id !== selected?.id &&
+          select(visible[i], false)
+        }
         onDirections={directions}
         onView={openJob}
         onLayoutHeight={setCarouselH}
       />
 
-      {!hideTabBar && !sheetOpen && <TabBar active="discover" bottom={barBottom} onChange={t => t !== 'discover' && onTabChange?.(t)} />}
+      {!hideTabBar && !sheetOpen && (
+        <TabBar
+          active="discover"
+          bottom={barBottom}
+          onChange={(t) => t !== "discover" && onTabChange?.(t)}
+        />
+      )}
 
       <JobSheet
         open={sheetOpen}
@@ -247,10 +321,18 @@ function DiscoverInner({
               disabled={!canBook}
               busy={busy}
               onPress={book}
-              label={canBook && times ? 'Book slot · ' + days[dayIndex].short + ', ' + times[timeIndex!].time : 'Pick a start time'}
+              label={
+                canBook && times
+                  ? "Book slot · " +
+                    days[dayIndex].short +
+                    ", " +
+                    times[timeIndex!].time
+                  : "Pick a start time"
+              }
             />
           ) : undefined
-        }>
+        }
+      >
         {sheetJob &&
           (confirmed && bookings[sheetJob.id] ? (
             <BookingConfirmed
@@ -268,7 +350,7 @@ function DiscoverInner({
               distance={distances[sheetJob.id]}
               days={days}
               dayIndex={dayIndex}
-              onDay={i => {
+              onDay={(i) => {
                 setDayIndex(i);
                 setTimeIndex(null);
               }}
@@ -285,5 +367,5 @@ function DiscoverInner({
 }
 
 const styles = StyleSheet.create({
-  root: {flex: 1, backgroundColor: C.flatBg},
+  root: { flex: 1, backgroundColor: C.flatBg },
 });

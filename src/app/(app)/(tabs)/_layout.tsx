@@ -1,6 +1,5 @@
 // Copy to: app/(tabs)/_layout.tsx  (replaces the two-tab layout)
 import React, { useEffect, useState } from "react";
-import { AccessibilityInfo } from "react-native";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCarouselTabTransition } from "@/components/export/expo-tab-carousel/CarouselTabTransition";
@@ -9,6 +8,8 @@ import {
   TabOverlayOpenContext,
 } from "@/components/export/expo-tabs/TabOverlay";
 import { Tab, TabBar } from "@/components/export/expo-discover";
+import { Platform } from "react-native";
+import TabBarAndroid from "@/components/export/expo-android-docked-tabbar/TabBarAndroid";
 
 /** route name ⇄ tab id */
 const ROUTE: Record<Tab, string> = {
@@ -21,6 +22,8 @@ const TAB: Record<string, Tab> = {
   discover: "discover",
   profile: "profile",
 };
+
+const android = Platform.OS === "android";
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
@@ -40,7 +43,7 @@ export default function TabsLayout() {
             ...transition,
           }}
           tabBar={({ state, navigation }) =>
-            overlay ? null : (
+            overlay ? null : !android ? (
               <TabBar
                 active={TAB[state.routes[state.index].name] ?? "home"}
                 bottom={bottom}
@@ -48,6 +51,17 @@ export default function TabsLayout() {
                   const name = ROUTE[t];
                   if (state.routes[state.index].name !== name)
                     navigation.navigate(name);
+                }}
+              />
+            ) : (
+              <TabBarAndroid
+                active={TAB[state.routes[state.index].name] ?? "home"}
+                bottomInset={bottom}
+                onChange={(t) => {
+                  const name = ROUTE[t];
+                  if (state.routes[state.index].name !== name) {
+                    navigation.navigate(name);
+                  }
                 }}
               />
             )

@@ -23,11 +23,6 @@ type Props = {
   onSelect: (job: Job) => void;
 };
 
-/**
- * Full-screen react-native-maps view.
- * iOS: Apple Maps (no key), muted standard + a faint lavender wash.
- * Android: Google Maps (needs an API key — see README) with MAP_STYLE.
- */
 const JobMap = forwardRef<JobMapHandle, Props>(function JobMap(
   { jobs, selectedId, user, initialRegion, focusOffset, onSelect },
   ref,
@@ -67,7 +62,7 @@ const JobMap = forwardRef<JobMapHandle, Props>(function JobMap(
         initialRegion={initialRegion}
         onRegionChangeComplete={(r) => (region.current = r)}
         showsUserLocation={false}
-        showsMyLocationButton={false}
+        showsMyLocationButton={true}
         showsPointsOfInterests={false}
         showsBuildings={false}
         showsCompass={false}
@@ -75,7 +70,7 @@ const JobMap = forwardRef<JobMapHandle, Props>(function JobMap(
         toolbarEnabled={false}
         rotateEnabled={false}
         pitchEnabled={false}
-        moveOnMarkerPress={false}
+        moveOnMarkerPress={true}
       >
         {user && <UserLocationMarker coordinate={user} />}
         {jobs.map((j) => (

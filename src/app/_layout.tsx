@@ -4,10 +4,23 @@ import { useCallback, useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import StartupAnimation from "@/components/startup/Splash";
+import {
+  startProfilerController,
+  stopProfilerController,
+} from "@/components/ProfilerController";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
+  useEffect(() => {
+    if (__DEV__) {
+      startProfilerController();
+
+      return () => {
+        stopProfilerController();
+      };
+    }
+  }, []);
   const [isAppReady, setIsAppReady] = useState(false);
   const [startupFinished, setStartupFinished] = useState(false);
 

@@ -27,6 +27,7 @@ import {
   ProfileData,
   SkillsData,
 } from "./types";
+import { useWhyDidYouRender } from "@/app/(app)/_layout";
 
 type Page = "skills" | "bank" | "documents" | null;
 type MaybeAsync<T> = (v: T) => Promise<void> | void;

@@ -1,79 +1,103 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
+import { withAndroidManifest } from "expo/config-plugins";
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
-  ...config,
-  name: "NarventCrew",
-  slug: "NarventCrew",
-  version: "1.0.0",
-  orientation: "portrait",
-  icon: "./assets/images/icon.png",
-  scheme: "narventcrew",
-  userInterfaceStyle: "automatic",
+function withCleartextTraffic(config: ExpoConfig): ExpoConfig {
+  return withAndroidManifest(config, (config) => {
+    const application = config.modResults.manifest.application?.[0];
 
-  ios: {
-    ...config.ios,
-    icon: "./assets/expo.icon",
-    bundleIdentifier: "com.narvent.narventcrew",
-    infoPlist: {
-      NSLocationWhenInUseUsageDescription:
-        "Narvent uses your location to show work near you",
-    },
-  },
+    if (application) {
+      application.$ = {
+        ...application.$,
+        "android:usesCleartextTraffic": "true",
+      };
+    }
 
-  android: {
-    ...config.android,
-    adaptiveIcon: {
-      backgroundColor: "#E6F4FE",
-      foregroundImage: "./assets/images/android-icon-foreground.png",
-      backgroundImage: "./assets/images/android-icon-background.png",
-      monochromeImage: "./assets/images/android-icon-monochrome.png",
-    },
-    predictiveBackGestureEnabled: false,
-    package: "com.narvent.narventcrew",
-    permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
-  },
+    return config;
+  });
+}
 
-  web: {
-    output: "static",
-    favicon: "./assets/images/favicon.png",
-  },
-
-  plugins: [
-    "expo-router",
-    [
-      "expo-splash-screen",
-      {
-        image: "./assets/images/Splash.png",
-        resizeMode: "contain",
-        backgroundColor: "#7D69FF",
+export default ({ config }: ConfigContext): ExpoConfig =>
+  withCleartextTraffic({
+    ...config,
+    name: "NarventCrew",
+    slug: "NarventCrew",
+    extra: {
+      ...config.extra,
+      eas: {
+        ...config.extra?.eas,
+        projectId: "badddabd-4c47-4e1f-9bc2-e8acd0d3280b",
       },
-    ],
-    "@react-native-community/datetimepicker",
-    [
-      "expo-location",
-      {
-        locationWhenInUsePermission:
+    },
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "narventcrew",
+    userInterfaceStyle: "automatic",
+
+    ios: {
+      ...config.ios,
+      icon: "./assets/expo.icon",
+      bundleIdentifier: "com.narvent.narventcrew",
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription:
           "Narvent uses your location to show work near you",
       },
-    ],
-    [
-      "react-native-maps",
-      {
-        androidGoogleMapsApiKey: process.env.MAPS_ANDROID_API_KEY,
-      },
-    ],
-    [
-      "expo-build-properties",
-      {
-        ios: {
-          enableSceneSupport: true,
-        },
-      },
-    ],
-  ],
+    },
 
-  experiments: {
-    typedRoutes: true,
-    reactCompiler: true,
-  },
-});
+    android: {
+      ...config.android,
+      adaptiveIcon: {
+        backgroundColor: "#E6F4FE",
+        foregroundImage: "./assets/images/android-icon-foreground.png",
+        backgroundImage: "./assets/images/android-icon-background.png",
+        monochromeImage: "./assets/images/android-icon-monochrome.png",
+      },
+      predictiveBackGestureEnabled: false,
+      package: "com.narvent.narventcrew",
+      permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+    },
+
+    web: {
+      output: "static",
+      favicon: "./assets/images/favicon.png",
+    },
+
+    plugins: [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/images/Splash.png",
+          resizeMode: "contain",
+          backgroundColor: "#7D69FF",
+        },
+      ],
+      "@react-native-community/datetimepicker",
+      [
+        "expo-location",
+        {
+          locationWhenInUsePermission:
+            "Narvent uses your location to show work near you",
+        },
+      ],
+      [
+        "react-native-maps",
+        {
+          androidGoogleMapsApiKey: process.env.MAPS_ANDROID_API_KEY,
+        },
+      ],
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            enableSceneSupport: true,
+          },
+        },
+      ],
+    ],
+
+    experiments: {
+      typedRoutes: true,
+      reactCompiler: true,
+    },
+  });
